@@ -4,16 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Set;
-
 @AllArgsConstructor
 @Builder
 @Data
-public class DiagnosisDto {
+public class PersonDto {
 
     private Long id;
 
-    private String name;
+    private String firstName;
 
-//    private Set<PersonDto> persons;
+    private String lastName;
+
+    private String patherName;
+
+    private String diagnosisName;
+
+    private String wardName;
+
 }

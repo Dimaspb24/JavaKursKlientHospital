@@ -1,6 +1,7 @@
 package com.bogdanov.project.client_hospital_admission.clientController;
 
 import com.bogdanov.project.client_hospital_admission.dto.DiagnosisDto;
+import com.bogdanov.project.client_hospital_admission.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,9 +32,13 @@ public class ClientDiagnosisController {
         RestTemplate restTemplate = new RestTemplate();
 
         String url = "http://localhost:8080/api/v1/diagnoses";
-        ResponseEntity<Object> responseEntity = restTemplate.exchange(url, HttpMethod.GET, getHttpEntityWithToken(), Object.class);
-        List<DiagnosisDto> diagnoses = (List<DiagnosisDto>) responseEntity.getBody();
 
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(url, HttpMethod.GET, getHttpEntityWithToken(), Object.class);
+        HashMap<String, Object> map = (HashMap<String, Object>) responseEntity.getBody();
+        List<DiagnosisDto> diagnoses = (List<DiagnosisDto>) map.get("diagnoses");
+        String mail = (String) map.get("user");
+
+        model.put("user", mail);
         model.put("diagnoses", diagnoses);
         return "diagnoses";
     }
