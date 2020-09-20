@@ -1,6 +1,7 @@
 package com.bogdanov.project.client_hospital_admission.clientController;
 
 import com.bogdanov.project.client_hospital_admission.dto.DiagnosisDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,15 +18,19 @@ import java.util.Map;
 @RequestMapping
 public class ClientDiagnosisController {
 
+    public HttpEntity<String> getHttpEntityWithToken() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, Sign.getToken());
+        return new HttpEntity<>("parameters", headers);
+
+    }
+
     @GetMapping("/diagnoses")
     public String findAllPersons(Map<String, Object> model) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.AUTHORIZATION, SignIn.token);
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-
         RestTemplate restTemplate = new RestTemplate();
+
         String url = "http://localhost:8080/api/v1/diagnoses";
-        ResponseEntity<Object> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity,  Object.class);
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(url, HttpMethod.GET, getHttpEntityWithToken(), Object.class);
         List<DiagnosisDto> diagnoses = (List<DiagnosisDto>) responseEntity.getBody();
 
         model.put("diagnoses", diagnoses);
