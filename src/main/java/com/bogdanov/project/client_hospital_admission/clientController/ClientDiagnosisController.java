@@ -1,15 +1,13 @@
 package com.bogdanov.project.client_hospital_admission.clientController;
 
 import com.bogdanov.project.client_hospital_admission.dto.DiagnosisDto;
-import com.bogdanov.project.client_hospital_admission.dto.UserDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -22,52 +20,68 @@ public class ClientDiagnosisController {
 
     public HttpEntity<String> getHttpEntityWithToken() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.AUTHORIZATION, Sign.getToken());
-        return new HttpEntity<>("parameters", headers);
+        headers.set(HttpHeaders.AUTHORIZATION, ClientAuthController.getToken());
+        return new HttpEntity<>(headers);
+    }
 
+    public HttpHeaders getHttpHeaderWithToken() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, ClientAuthController.getToken());
+        return headers;
     }
 
     @GetMapping("/diagnoses")
-    public String findAllPersons(Map<String, Object> model) {
+    public String findAllDiagnoses(@RequestParam(required = false) String filter, Model model) {
         RestTemplate restTemplate = new RestTemplate();
+        String url = "";
 
-        String url = "http://localhost:8080/api/v1/diagnoses";
+        if (filter != null && !filter.isEmpty()) {
+            url = "http://localhost:8080/api/v1/diagnoses/find/".concat(filter);
+            ResponseEntity<Object> responseEntity = restTemplate.exchange(
+                    url, HttpMethod.GET, getHttpEntityWithToken(), Object.class);
 
-        ResponseEntity<Object> responseEntity = restTemplate.exchange(url, HttpMethod.GET, getHttpEntityWithToken(), Object.class);
-        HashMap<String, Object> map = (HashMap<String, Object>) responseEntity.getBody();
-        List<DiagnosisDto> diagnoses = (List<DiagnosisDto>) map.get("diagnoses");
-        String mail = (String) map.get("user");
+            List<DiagnosisDto> diagnosis = (List<DiagnosisDto>) responseEntity.getBody();
+            model.addAttribute("diagnosesList", diagnosis);
+//            model.addAttribute("filter", filter);
+        } else {
 
-        model.put("user", mail);
-        model.put("diagnoses", diagnoses);
+            url = "http://localhost:8080/api/v1/diagnoses";
+
+            ResponseEntity<Object> responseEntity = restTemplate.exchange(
+                    url, HttpMethod.GET, getHttpEntityWithToken(), Object.class);
+            HashMap<String, Object> map = (HashMap<String, Object>) responseEntity.getBody();
+//            String mail = (String) map.get("user");
+            List<DiagnosisDto> diagnoses = (List<DiagnosisDto>) map.get("diagnoses");
+
+//            model.addAttribute("user", mail);
+            model.addAttribute("diagnosesList", diagnoses);
+        }
         return "diagnoses";
     }
 
+    @PostMapping("/diagnoses/save")
+    public String saveDiagnosis(@RequestParam String name) {
+        DiagnosisDto diagnosis = new DiagnosisDto(name);
+        HttpEntity<DiagnosisDto> httpEntity = new HttpEntity<>(diagnosis, getHttpHeaderWithToken());
+        String url = "http://localhost:8080/api/v1/diagnoses";
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(
+                url, HttpMethod.POST, httpEntity, Object.class);
+
+//        DiagnosisDto diagnosisDto = (DiagnosisDto) responseEntity.getBody();
+        return "redirect:/diagnoses";
+    }
+
+    // Робит или нет?
 //    @GetMapping("/diagnoses/{id}")
-//    public String findPersonById(@PathVariable Long id, Map<String, Object> model) {
-//        Diagnosis diagnosis = diagnosisService.findById(id);
+//    public String findDiagnosisById(@PathVariable Long id, Map<String, Object> model) {
+//        RestTemplate restTemplate = new RestTemplate();
+//        String url = "http://localhost:8080/api/v1/diagnoses/".concat(String.valueOf(id));
+//        ResponseEntity<Object> responseEntity = restTemplate.exchange(
+//                url, HttpMethod.GET, getHttpEntityWithToken(), Object.class);
+//        DiagnosisDto diagnosis = (DiagnosisDto) responseEntity.getBody();
+//
 //        model.put("diagnoses", diagnosis);
 //        return "diagnoses";
 //    }
-//
-//    @PostMapping("/diagnoses")
-//    public String savePerson(@RequestParam String name) {
-//        Diagnosis diagnosis = new Diagnosis(name, null);
-//        diagnosisService.saveDiagnosis(diagnosis);
-//        return "redirect:/diagnoses";
-//    }
-//
-//    @PostMapping("/diagnoses/filter")
-//    public String filter(@RequestParam String filter, Map<String, Object> model) {
-//        List<Diagnosis> diagnoses;
-//
-//        if (filter != null && !filter.isEmpty()) {
-//            diagnoses = diagnosisService.findByName(filter);
-//            model.put("diagnoses", diagnoses);
-//            return "/diagnoses";
-//        } else {
-//            return "redirect:/diagnoses";
-//        }
-//    }
-
 }

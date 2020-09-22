@@ -1,19 +1,16 @@
 package com.bogdanov.project.client_hospital_admission.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-
-import java.util.Set;
+import lombok.*;
 
 @AllArgsConstructor
+@ToString
+@RequiredArgsConstructor
 @Builder
 @Data
 public class DiagnosisDto {
-
     private Long id;
 
+    @NonNull
     private String name;
-
 //    private Set<PersonDto> persons;
 }

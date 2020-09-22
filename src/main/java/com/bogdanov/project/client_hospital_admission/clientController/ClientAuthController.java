@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/auth")
-public class Sign {
+public class ClientAuthController {
 
     public static String token;
 
