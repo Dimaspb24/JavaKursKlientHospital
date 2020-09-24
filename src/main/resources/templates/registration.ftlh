@@ -3,6 +3,6 @@
 
 <@c.page>
     Add new user
-    <h1>Registration: ${message!"Message"}!</h1>
+    <h1>Registration ${message!}</h1>
     <@r.registration "/auth/registration" />
 </@c.page>

@@ -1,0 +1,72 @@
+package com.bogdanov.project.client_hospital_admission.clientController;
+
+import com.bogdanov.project.client_hospital_admission.dto.UserDto;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+
+@Controller
+@RequestMapping("users")
+public class ClientUserController {
+
+    @GetMapping
+    public String userList(Model model) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/api/v1/users";
+
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(
+                url, HttpMethod.GET, ClientAuthController.getHttpEntityWithToken(), Object.class);
+
+        List<UserDto> users = (List<UserDto>) responseEntity.getBody();
+
+        model.addAttribute("users", users);
+        return "userList";
+    }
+
+    @GetMapping("{email}")
+    public String userEditForm(@PathVariable String email, Model model) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/api/v1/users/".concat(email);
+
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(
+                url, HttpMethod.GET, ClientAuthController.getHttpEntityWithToken(), Object.class);
+//        Почему здесь нельзя собрать класс
+
+//        UserDto user = (UserDto) responseEntity.getBody();
+        LinkedHashMap<?, ?> user = (LinkedHashMap<?, ?>) responseEntity.getBody();
+
+        model.addAttribute("user", user);
+        return "userEdit";
+    }
+
+    //    @RequestParam Map<String, String> form
+    @PostMapping
+    public String userSave(@RequestParam("email") String email,
+                           @RequestParam("password") String newPassword,
+                           @RequestParam("firstName") String firstName,
+                           @RequestParam("lastName") String lastName,
+                           @RequestParam("role") String role,
+                           @RequestParam("status") String status) {
+
+        UserDto userDto = new UserDto(email, newPassword, firstName, lastName, role, status);
+
+        HttpEntity<UserDto> httpEntity = new HttpEntity<>(userDto, ClientAuthController.getHttpHeaderWithToken());
+
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/api/v1/users";
+
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(
+                url, HttpMethod.POST, httpEntity, Object.class);
+
+        return "redirect:/users";
+    }
+}

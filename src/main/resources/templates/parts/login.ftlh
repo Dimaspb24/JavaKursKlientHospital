@@ -1,7 +1,6 @@
 <#--"/auth/login"-->
 <#macro login path>
     <form class="form-signin" action="${path}" method="post">
-        <h2 class="form-signin-heading">Login</h2>
         <p><label for="email">Email</label>
             <input type="text" id="email" name="email" class="form-control" placeholder="Email" required></p>
         <p><label for="password">Password</label>

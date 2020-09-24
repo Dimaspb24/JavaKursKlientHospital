@@ -2,6 +2,6 @@
 <#import "parts/login.ftlh" as l>
 
 <@c.page>
-    Login Customer
+    <h2 class="form-signin-heading">Login</h2>
     <@l.login "/auth/login" />
 </@c.page>
