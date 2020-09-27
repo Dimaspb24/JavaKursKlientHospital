@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("users")
@@ -28,7 +29,7 @@ public class ClientUserController {
         List<UserDto> users = (List<UserDto>) responseEntity.getBody();
 
         model.addAttribute("users", users);
-        return "userList";
+        return "users";
     }
 
     @GetMapping("{email}")
@@ -40,7 +41,6 @@ public class ClientUserController {
         ResponseEntity<Object> responseEntity = restTemplate.exchange(
                 url, HttpMethod.GET, ClientAuthController.getHttpEntityWithToken(), Object.class);
 //        Почему здесь нельзя собрать класс
-
 //        UserDto user = (UserDto) responseEntity.getBody();
         LinkedHashMap<?, ?> user = (LinkedHashMap<?, ?>) responseEntity.getBody();
 
@@ -50,14 +50,15 @@ public class ClientUserController {
 
     //    @RequestParam Map<String, String> form
     @PostMapping
-    public String userSave(@RequestParam("email") String email,
-                           @RequestParam("password") String newPassword,
-                           @RequestParam("firstName") String firstName,
-                           @RequestParam("lastName") String lastName,
-                           @RequestParam("role") String role,
-                           @RequestParam("status") String status) {
+    public String userSave(@RequestParam Map<String, String> form) {
 
-        UserDto userDto = new UserDto(email, newPassword, firstName, lastName, role, status);
+        UserDto userDto = new UserDto(null,
+                form.get("email"),
+                form.get("password"),
+                form.get("firstName"),
+                form.get("lastName"),
+                form.get("role"),
+                form.get("status"));
 
         HttpEntity<UserDto> httpEntity = new HttpEntity<>(userDto, ClientAuthController.getHttpHeaderWithToken());
 
@@ -67,6 +68,15 @@ public class ClientUserController {
         ResponseEntity<Object> responseEntity = restTemplate.exchange(
                 url, HttpMethod.POST, httpEntity, Object.class);
 
+        return "redirect:/users";
+    }
+
+    @PostMapping("/{id}")
+    public String deleteUserById(@PathVariable Long id) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:8080/api/v1/users/".concat(String.valueOf(id));
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(
+                url, HttpMethod.POST, ClientAuthController.getHttpEntityWithToken(), Object.class);
         return "redirect:/users";
     }
 }

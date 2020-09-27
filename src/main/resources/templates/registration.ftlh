@@ -2,7 +2,7 @@
 <#import "parts/registration.ftlh" as r>
 
 <@c.page>
-    Add new user
-    <h1>Registration ${message!}</h1>
+    <h1>Registration</h1><br>
+    <h5>${message!}</h5> <br>
     <@r.registration "/auth/registration" />
 </@c.page>

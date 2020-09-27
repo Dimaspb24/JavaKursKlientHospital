@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class AuthController {
 
-    @GetMapping("login")
+    @GetMapping
     public String getSignInPage() {
         return "login";
     }
@@ -18,10 +18,5 @@ public class AuthController {
     public String getSignUpPage(Model model) {
         model.addAttribute("message", "Введите свои пользовательские данные");
         return "registration";
-    }
-
-    @GetMapping
-    public String getStartPage() {
-        return "start";
     }
 }

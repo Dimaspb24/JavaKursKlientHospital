@@ -3,8 +3,8 @@ package com.bogdanov.project.client_hospital_admission.dto;
 import lombok.*;
 
 @AllArgsConstructor
-@ToString
 @RequiredArgsConstructor
+@NoArgsConstructor
 @Builder
 @Data
 public class DiagnosisDto {
@@ -12,5 +12,6 @@ public class DiagnosisDto {
 
     @NonNull
     private String name;
+
 //    private Set<PersonDto> persons;
 }

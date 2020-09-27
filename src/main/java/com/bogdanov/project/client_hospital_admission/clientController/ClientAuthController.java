@@ -2,6 +2,7 @@ package com.bogdanov.project.client_hospital_admission.clientController;
 
 import com.bogdanov.project.client_hospital_admission.dto.AuthenticationRequestDto;
 import com.bogdanov.project.client_hospital_admission.dto.UserDto;
+import lombok.Getter;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,21 +12,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
+import java.util.HashMap;
 
 @Controller
 @RequestMapping("/auth")
 public class ClientAuthController {
-
-    public static String token;
-    public static String email;
-
-    public static String getEmail() {
-        return email;
-    }
+    private static boolean signedIn;
+    @Getter
+    private static String email;
+    @Getter
+    private static String userName;
+    @Getter
+    private static String role;
+    private static String token;
 
     public static String getToken() {
         return token;
+    }
+
+    public static boolean isAdmin() {
+        return role.equals("ADMIN");
     }
 
     public static HttpEntity<String> getHttpEntityWithToken() {
@@ -53,9 +59,14 @@ public class ClientAuthController {
 
         ResponseEntity<Object> response = restTemplate.exchange(urlAuth, HttpMethod.POST, body, Object.class);
 
-        Map<Object, Object> responseBody = (Map<Object, Object>) response.getBody();
-        token = String.valueOf(responseBody.get("token"));
-        email = String.valueOf(responseBody.get("email"));
+        HashMap<String, Object> responseBody = (HashMap<String, Object>) response.getBody();
+
+        token = (String) responseBody.get("token");
+        userName = (String) responseBody.get("userName");
+        role = (String) responseBody.get("role");
+        email = (String) responseBody.get("email");
+        signedIn = true;
+
 
         model.addAttribute("email", email);
         return "main";
@@ -75,7 +86,7 @@ public class ClientAuthController {
                                Model model) {
 
         RestTemplate restTemplate = new RestTemplate();
-        UserDto userDto = new UserDto(email, password, firstName, lastName);
+        UserDto userDto = new UserDto(null, email, password, firstName, lastName, null, null);
         HttpEntity<UserDto> body = new HttpEntity<>(userDto);
         String url = "http://localhost:8080/api/v1/auth/registration";
         ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.POST, body, Object.class);
@@ -95,7 +106,10 @@ public class ClientAuthController {
         String url = "http://localhost:8080/api/v1/auth/logout";
         ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.POST, getHttpEntityWithToken(), Object.class);
         token = null;
+        role = null;
+        userName = null;
         email = null;
+        signedIn = false;
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             return "login";
         } else {

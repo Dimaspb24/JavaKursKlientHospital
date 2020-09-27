@@ -7,19 +7,13 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Data
-public class UserDto {
-
+public class WardDto {
     private Long id;
-    @NonNull
-    private String email;
 
-    private String password;
     @NonNull
-    private String firstName;
+    private String name;
     @NonNull
-    private String lastName;
+    private Integer maxCount;
 
-    private String role;
-
-    private String status;
+//    private Set<PersonDto> persons;
 }
