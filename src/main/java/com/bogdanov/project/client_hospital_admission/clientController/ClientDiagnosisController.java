@@ -1,6 +1,7 @@
 package com.bogdanov.project.client_hospital_admission.clientController;
 
 import com.bogdanov.project.client_hospital_admission.dto.DiagnosisDto;
+import com.bogdanov.project.client_hospital_admission.dto.PersonDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -57,12 +58,19 @@ public class ClientDiagnosisController {
 
 
     @PostMapping("/{id}")
-    public String deleteDiagnosisById(@PathVariable Long id) {
+    public String deleteDiagnosisById(@PathVariable Long id, Model model) {
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8080/api/v1/diagnoses/".concat(String.valueOf(id));
         ResponseEntity<Object> responseEntity = restTemplate.exchange(
                 url, HttpMethod.POST, ClientAuthController.getHttpEntityWithToken(), Object.class);
-        return "redirect:/diagnoses";
+
+        List<PersonDto> dependentPersons = (List<PersonDto>) responseEntity.getBody();
+        if (dependentPersons == null || dependentPersons.isEmpty()) {
+            return "redirect:/diagnoses";
+        } else {
+            model.addAttribute("persons", dependentPersons);
+            return "persons";
+        }
     }
 
     @GetMapping("{id}")

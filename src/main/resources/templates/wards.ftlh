@@ -31,7 +31,7 @@
         <form method="get" action="/wards">
             <div class="input-group mb-3 mt-3">
                 <input type="text" name="filter" class="form-control"
-                       placeholder="Введите имя палаты" value="${filter!}">
+                       placeholder="Enter ward name" value="${filter!}">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit">Search</button>
                 </div>
