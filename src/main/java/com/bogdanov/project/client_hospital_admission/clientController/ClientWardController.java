@@ -37,7 +37,12 @@ public class ClientWardController {
 
         List<WardDto> wards = (List<WardDto>) responseEntity.getBody();
         model.addAttribute("wards", wards);
-        return "wards";
+
+        if (ClientAuthController.getRole().equals("ADMIN")) {
+            return "wards";
+        } else {
+            return "wardsForUser";
+        }
     }
 
     //    пока задействовано только сохранение

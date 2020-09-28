@@ -1,4 +1,4 @@
-<#import "parts/common.ftlh" as c >
+<#import "parts/adminCommon.ftlh" as c >
 
 <@c.page>
     <div class="form-group mt-3">

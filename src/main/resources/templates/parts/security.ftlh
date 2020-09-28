@@ -1,17 +1,18 @@
 <#--<#assign-->
-<#--known = ClientAuthController.signedIn-->
+<#--    known = currentUserName!-->
 <#-->-->
 
-<#--<#if true>-->
+<#--<#if known??>-->
 <#--    <#assign-->
-<#--    email = ClientAuthController.getEmail()-->
-<#--    name = ClientAuthController.getUserName()-->
-<#--    isAdmin = ClientAuthController.isAdmin()-->
+<#--    email = currentEmail!-->
+<#--    name = "unknown user"-->
+<#--    role = "USER"-->
 <#--    >-->
-
+<#--&lt;#&ndash;.seq_contains('ADMIN')&ndash;&gt;-->
 <#--<#else>-->
 <#--    <#assign-->
-<#--    name = "unknown"-->
-<#--    isAdmin = false-->
+<#--    email = "unknown email"-->
+<#--    name = "unknown user"-->
+<#--    role = "USER"-->
 <#--    >-->
 <#--</#if>-->

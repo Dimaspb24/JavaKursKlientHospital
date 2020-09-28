@@ -1,8 +1,8 @@
-<#import "parts/common.ftlh" as c >
+<#import "parts/adminCommon.ftlh" as c >
 
 <@c.page>
     <div>
-
+        <#--        <h2>${currentUserName!}</h2>-->
         <#--        Создать палату -->
         <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button"
            aria-expanded="false" aria-controls="collapseExample">

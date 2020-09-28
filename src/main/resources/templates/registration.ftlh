@@ -1,4 +1,4 @@
-<#import "parts/common.ftlh" as c>
+<#import "parts/adminCommon.ftlh" as c>
 <#import "parts/registration.ftlh" as r>
 
 <@c.page>

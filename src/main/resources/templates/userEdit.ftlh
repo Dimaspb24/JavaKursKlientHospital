@@ -1,4 +1,4 @@
-<#import "parts/common.ftlh" as c >
+<#import "parts/adminCommon.ftlh" as c >
 
 <@c.page>
     <form name="form" action="/users" method="post" accept-charset="UTF-8">

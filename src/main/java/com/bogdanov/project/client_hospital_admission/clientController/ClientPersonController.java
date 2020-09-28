@@ -36,7 +36,12 @@ public class ClientPersonController {
 
         List<PersonDto> persons = (List<PersonDto>) responseEntity.getBody();
         model.addAttribute("persons", persons);
-        return "persons";
+
+        if (ClientAuthController.getRole().equals("ADMIN")) {
+            return "persons";
+        } else {
+            return "personsForUser";
+        }
     }
 
     //    пока задействовано только сохранение

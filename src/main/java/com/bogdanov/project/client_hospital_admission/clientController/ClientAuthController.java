@@ -69,13 +69,24 @@ public class ClientAuthController {
 
 
         model.addAttribute("email", email);
-        return "main";
+        model.addAttribute("userName", userName);
+        model.addAttribute("role", role);
+
+        if (ClientAuthController.getRole().equals("ADMIN")) {
+            return "main";
+        } else {
+            return "mainForUser";
+        }
     }
 
     @GetMapping("/main")
     public String main(Model model) {
         model.addAttribute("email", email);
-        return "main";
+        if (ClientAuthController.getRole().equals("ADMIN")) {
+            return "main";
+        } else {
+            return "mainForUser";
+        }
     }
 
     @PostMapping("/registration")

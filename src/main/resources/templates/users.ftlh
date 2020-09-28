@@ -1,8 +1,8 @@
-<#import "parts/common.ftlh" as c >
+<#import "parts/adminCommon.ftlh" as c >
 
 <@c.page>
 
-    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+    <a class="btn btn-primary mb-3" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
        aria-controls="collapseExample">
         Add user
     </a>

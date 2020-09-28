@@ -13,12 +13,6 @@
 <#--            <li class="nav-item">-->
 <#--                <a class="nav-link" href="/auth/main">Home</a>-->
 <#--            </li>-->
-
-            <#--            <#if isAdmin>-->
-            <li class="nav-item">
-                <a class="nav-link" href="/users">Users</a>
-            </li>
-            <#--            </#if>-->
             <li class="nav-item">
                 <a class="nav-link" href="/persons">Persons</a>
             </li>

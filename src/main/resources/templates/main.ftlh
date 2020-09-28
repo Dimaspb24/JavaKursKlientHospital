@@ -1,9 +1,9 @@
-<#import "parts/common.ftlh" as c>
+<#import "parts/adminCommon.ftlh" as c>
 
 
 <@c.page>
-    <h5>Welcome to Hospital admission department</h5>
+    <h3>Welcome to Hospital admission department</h3>
 
-    <div>Email: ${email!}</div>
-
+    <h4> Role: ADMIN</h4>
+<#--    <#global currentUserName="${userName}" currenEmail="${email}" currentRole="${role}">-->
 </@c.page>

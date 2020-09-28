@@ -37,7 +37,12 @@ public class ClientDiagnosisController {
 
         List<DiagnosisDto> diagnoses = (List<DiagnosisDto>) responseEntity.getBody();
         model.addAttribute("diagnoses", diagnoses);
-        return "diagnoses";
+
+        if (ClientAuthController.getRole().equals("ADMIN")) {
+            return "diagnoses";
+        } else {
+            return "diagnosesForUser";
+        }
     }
 
     @PostMapping("/save")
